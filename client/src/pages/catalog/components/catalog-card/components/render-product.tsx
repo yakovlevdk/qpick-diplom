@@ -1,31 +1,15 @@
 import { Link } from "react-router-dom";
 import { useAddToCart } from "../../../../../hooks/use-add-to-cart/use-add-to-cart";
 import { productType } from '../../../../../types/productType'
+import { useAddToFavorites } from "../../../../../hooks/use-add-to-favorites/use-add-to-favorites";
+import { useRemoveFromFavorites } from "../../../../../hooks/use-remove-from-favorites/use-remove-from-favorites";
 export const RenderProducts = (products: Array<productType>) => {
   const { handleAddToCart } = useAddToCart();
   const favoritesString = localStorage.getItem("favorites");
   const favorites: productType[] = favoritesString ? JSON.parse(favoritesString) : [];
-  const addToFavorites = (product: productType) => {
-    if (product) {
-      const favoritesString = localStorage.getItem("favorites");
-      const favoritesToAdd: productType[] =favoritesString ? 
-        JSON.parse(favoritesString) : [];
+  const { addToFavorites} = useAddToFavorites()
+ const { removeFromFavorites} = useRemoveFromFavorites()
 
-      favoritesToAdd.push(product);
-      localStorage.setItem("favorites", JSON.stringify(favoritesToAdd));
-      location.reload();
-    }
-  };
-  const removeFromFavorites = (card: productType) => {
-    if (favorites ) { 
-      const newCards = favorites.filter(
-        (product: productType) => product["_id"] !== card["_id"]
-      );
-      localStorage.setItem("favorites", JSON.stringify(newCards));
-      location.reload();
-    }
-  
-  };
   return (
     <>
       {products.map((product: productType) => (
@@ -68,7 +52,9 @@ export const RenderProducts = (products: Array<productType>) => {
               src="/basket.svg"
               alt="Basket"
               onClick={() => {
-                handleAddToCart(product["_id"])
+                if( product['_id']) { 
+                  handleAddToCart(product["_id"])
+                }
               }}
             />
           </div>

@@ -1,61 +1,38 @@
 import { useState } from "react";
 import Rating from "@mui/material/Rating";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setReviews } from "../../../../slices/reviews-slice";
-import { getReviews } from "../../../../api/get-reviews";
-import { jwtDecode } from "jwt-decode";
-import { addReview } from "../../../../api/add-review";
-import {useNavigate} from 'react-router-dom'
+import {  useSelector } from "react-redux";
 import { RootState} from '../../../../store'
 import { getCookieToken} from '../../../../utils/get-cookie-token'
 import { userType} from '../../../../types/userType'
+import { useGetReviews } from "../../../../hooks/use-get-reviews/use-get-reviews";
+import { useAddReview } from "../../../../hooks/use-add-review/use-add-review";
+import { useParseUser } from "../../../../hooks/use-parse-user/use-parse-user";
 interface ReviewsProps { 
   productId: string
 }
-
 export const Reviews: React.FC<ReviewsProps> = ({ productId } ) => {
+  const { getReviews } = useGetReviews()
   const [value, setValue] = useState<number | null>(null);
-const navigate = useNavigate()
+  const { handleParseUser} = useParseUser()
   const [content, setContent] = useState("");
-  const dispatch = useDispatch();
   const reviews = useSelector((state: RootState) => state.reviews.reviews);
   const [cookieValue] = useState(() => getCookieToken()
   );
   const [parsedUser, setParsedUser] = useState<userType | null>(null);
-
+  const { addNewReview} = useAddReview()
   useEffect(() => {
-    try {
-      if (cookieValue) {
-        setParsedUser(jwtDecode(cookieValue));
+    if( cookieValue) { 
+      const user = handleParseUser(cookieValue)
+      if( user) { 
+        setParsedUser(user)
       }
-    } catch (error) {
-      console.error("Ошибка декодирования токена:", error);
-      setTimeout(() => navigate("/login"), 2000);
-      return;
     }
-
-    const getReview = async () => {
-      const reviews = await getReviews();
-      dispatch(setReviews(reviews));
-      return reviews;
-    };
-    getReview();
+    getReviews()
   }, []);
   const currentReviews = reviews.filter(
     (rev) => rev["product_id"] === productId
   );
-  const addNewReview = () => {
-    if ( parsedUser) { 
-      addReview({
-        productId: productId,
-        userId: parsedUser.id,
-        userName: parsedUser.name,
-        rate: value,
-        content: content,
-      });
-    }
-  };
 
   return (
     <div className="reviews-container">
@@ -75,7 +52,11 @@ const navigate = useNavigate()
                 setValue(newValue);
               }}
             />
-            <button  onClick={addNewReview} type="submit" className="otpravit">
+            <button  onClick={() => { 
+              if(parsedUser && value ) { 
+                addNewReview({parsedUser, value, content, productId})
+              }
+             }} type="submit" className="otpravit"> 
               Отправить
             </button>
           </div>

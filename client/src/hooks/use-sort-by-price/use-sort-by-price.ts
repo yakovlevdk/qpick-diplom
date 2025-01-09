@@ -1,25 +1,12 @@
 import { useDispatch } from "react-redux";
 import { setFilteredProductsByPrice } from "../../slices/filtered-products-by-price-slice";
-interface Product {
-  id: number;
-  imgUrl: string;
-  type: string;
-  title: string;
-  category: string;
-  price: number;
-  description: string;
-  specifications: {
-    storage: string;
-    color: string;
-    battery: string;
-  };
-}
+import { productType } from "../../types/productType";
 
 export const useSortByPrice = () => {
   const dispatch = useDispatch();
-  const handleSortByPrice = (productsOnSort: Product[]) => {
+  const handleSortByPrice = (productsOnSort: productType[]) => {
     const filteredProducts = [...productsOnSort].sort(
-      (a, b) => a.price - b.price
+      (a, b) => Number(a.price) - Number(b.price)
     );
     dispatch(setFilteredProductsByPrice(filteredProducts));
   };

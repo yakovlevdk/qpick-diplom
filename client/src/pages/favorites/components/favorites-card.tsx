@@ -1,9 +1,9 @@
-import { removeFromFavorites } from "../utils/remove-from-favorites";
 import { useNavigate } from "react-router-dom";
 import { useAddToCart } from "../../../hooks/use-add-to-cart/use-add-to-cart";
 import { useState } from "react";
 import { getCookieToken } from "../../../utils/get-cookie-token";
 import { productType} from '../../../types/productType'
+import { useRemoveFromFavorites } from "../../../hooks/use-remove-from-favorites/use-remove-from-favorites";
 
 
 interface FavoritesCardProps { 
@@ -14,11 +14,13 @@ export const FavoritesCard: React.FC<FavoritesCardProps> = ({card} ) => {
   const [cookieValue] = useState<string | undefined>(() => getCookieToken());
   const navigate = useNavigate();
   const { handleAddToCart } = useAddToCart();
-
+const { removeFromFavorites} = useRemoveFromFavorites()
 
   const handleButtonClick = () => {
     if (cookieValue) {
+      if(card["_id"] ) { 
         handleAddToCart(card["_id"]);
+      }
     } else {
         navigate("/login");
     }

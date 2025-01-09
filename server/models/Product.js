@@ -12,6 +12,7 @@ const ProductSchema = mongoose.Schema({
   type: {
     type: String,
     required: true,
+    ref: 'Types'
   },
   category: {
     type: String,
@@ -26,18 +27,9 @@ const ProductSchema = mongoose.Schema({
     required: true,
   },
   specifications: {
-    storage: {
-      type: String,
-      required: true,
-    },
-    color: {
-      type: String,
-      required: true,
-    },
-    battery: {
-      type: String,
-      required: true,
-    },
+    color: String,
+   type: Map, 
+   of: String,
   },
 });
 

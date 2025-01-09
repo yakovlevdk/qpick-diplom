@@ -6,24 +6,10 @@ import { RenderProducts } from "./components/render-product";
 import { RootState} from '../../../../store'
 import { isFilteredCurrentProducts } from "../../utlis/is-filtered-current-products";
 import {
-  clearFilteredProductsByType,
   setFilteredProductsByType,
 } from "../../../../slices/filtered-products-by-type-slice";
-interface Product {
-  _id: string;
-  id: number;
-  imgUrl: string;
-  type: string;
-  title: string;
-  category: string;
-  price: number;
-  description: string;
-  specifications: {
-    storage: string;
-    color: string;
-    battery: string;
-  };
-}
+import { productType } from "../../../../types/productType";
+
 
 export const CatalogCards: React.FC = () => {
   const dispatch = useDispatch();
@@ -42,12 +28,18 @@ export const CatalogCards: React.FC = () => {
   );
 
   useEffect(() => {
-    if (type) {
+    if (type && type === 'applewatch') { 
       const filteredByType = allProducts.filter(
-        (product: Product) => product.type.toLowerCase() === type
+        (product: productType) => product.type === 'Apple Watch'
       );
       dispatch(setFilteredProductsByType(filteredByType));
-    }
+      console.log(filteredByType);
+    } else if (type) {
+      const filteredByType = allProducts.filter(
+        (product: productType) => product.type.toLowerCase() === type
+      );
+      dispatch(setFilteredProductsByType(filteredByType));
+    } 
   }, [type, allProducts, dispatch]);
 
   return (
