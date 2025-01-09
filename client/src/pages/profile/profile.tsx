@@ -48,11 +48,11 @@ export const Profile = () => {
 
   const logout = () => {
     const fetchLogout = async () => {
-      const response = await fetch("http://localhost:3000/logout", {
+      const response = await fetch("http://localhost:3000/users/logout", {
         method: "POST",
         credentials: "include",
       });
-      if (response.status === 401) {
+      if (response.status === 200) {
         navigate("/login");
         return;
       }

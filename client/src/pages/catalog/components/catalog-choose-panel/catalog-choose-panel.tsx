@@ -3,17 +3,20 @@ import { CatalogChoosePanelItem } from "./components/catalog-choose-panel-item/c
 import { useSortByPrice } from "../../../../hooks/use-sort-by-price/use-sort-by-price";
 import { clearFilteredProducts } from "../../../../slices/filtered-products-by-price-slice";
 import { isFilteredCurrentProducts } from "../../utlis/is-filtered-current-products";
-import { choosePanelData} from './utils/choose-panel-data'
-import { productType} from '../../../../types/productType'
 import { RootState} from '../../../../store'
 import { useParams } from "react-router-dom";
+import { useGetTypes } from "../../../../hooks/use-get-types/use-get-types";
+import { useEffect, useState } from "react";
+import { TypesType } from "../../../../types/typesType";
+
 export const CatalogChoosePanel: React.FC = () => {
   const { type } = useParams();
+  const { handleGetTypes } = useGetTypes()
   const dispatch = useDispatch();
   const allProducts = useSelector((state: RootState) => state.products.products);
   const { handleSortByPrice } = useSortByPrice();
   const panelByType = allProducts.filter(
-    (prod: productType) => prod.type.toLowerCase() === type
+    (prod) => prod.type.toLowerCase() === type
   );
   const filteredByTypeProducts = useSelector(
     (state: RootState) => state.filteredProductsByType.products
@@ -26,6 +29,19 @@ export const CatalogChoosePanel: React.FC = () => {
     (product, index, self) =>
       index === self.findIndex((p) => p.title === product.title)
   );
+  const [types, setTypes] = useState<TypesType[]>([]); 
+
+  useEffect(() => {
+    const fetchTypes = async () => {
+      const typesData = await handleGetTypes();
+      console.log(typesData);
+      setTypes(typesData);
+    };
+
+    fetchTypes();
+  }, []); 
+
+
 
   return (
     <div className="catalog-choose-panel">
@@ -34,17 +50,17 @@ export const CatalogChoosePanel: React.FC = () => {
           ? uniqueTitles.map((item) => {
               return (
                 <CatalogChoosePanelItem
-                  key={item.id}
+                  key={item._id}
                   title={item.title}
                   imgUrl={item.imgUrl}
                   linkUrl={`/product/${item["_id"]}`}
                 />
               );
             })
-          : choosePanelData.map((item) => {
+          : types.map((item) => {
               return (
                 <CatalogChoosePanelItem
-                  key={item.id}
+                  key={Math.random() }
                   title={item.title}
                   imgUrl={item.imgUrl}
                   linkUrl={item.linkUrl}
@@ -55,12 +71,13 @@ export const CatalogChoosePanel: React.FC = () => {
       {filteredByPriceProducts.length === 0 && (
         <button
           className="catalog-choose-panel-sort-button"
-          onClick={() =>
-            handleSortByPrice(
-              isFilteredCurrentProducts(filteredByTypeProducts)
-                ? filteredByTypeProducts
-                : allProducts
-            )
+          onClick={() => { 
+            const isFiltered =  isFilteredCurrentProducts(filteredByTypeProducts)
+            handleSortByPrice(isFiltered
+              ? filteredByTypeProducts
+              : allProducts
+          )
+          }
           }
         >
           Сортировать

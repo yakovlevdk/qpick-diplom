@@ -13,13 +13,13 @@ import { useSetProducts } from "../../hooks/use-set-products/use-set-products";
 export const AdminPanel = () => {
   const [isOpenAddPanel, setIsOpenAddPanel] = useState(false);
   const [isOpenList, setIsOpenList] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false); // New state for edit mode
-  const [editingProductId, setEditingProductId] = useState<string | null>(null); // Track ID of product being edited
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
   const products = useSelector((state: RootState) => state.products.products);
   const { handleSetProducts } = useSetProducts();
 
   const [productDetails, setProductDetails] = useState<productType>({
-    _id : '',
+    _id: '',
     title: "",
     imgUrl: "",
     type: "",
@@ -51,6 +51,7 @@ export const AdminPanel = () => {
       return;
     }
 
+    // Проверяем, является ли поле характеристикой товара
     if (name in productDetails.specifications) {
       setProductDetails((prevDetails) => ({
         ...prevDetails,
@@ -69,7 +70,8 @@ export const AdminPanel = () => {
 
   const addOrUpdateProduct = () => {
     if (isEditMode && editingProductId) {
-      updateProductApi(editingProductId, productDetails).then(() => {
+      const updatedProductDetails = getUpdatedProductDetails(editingProductId);
+      updateProductApi(editingProductId, updatedProductDetails).then(() => {
         handleSetProducts();
         resetForm();
       });
@@ -79,6 +81,62 @@ export const AdminPanel = () => {
         resetForm();
       });
     }
+  };
+
+  const getUpdatedProductDetails = (productId: string) => {
+    const originalProduct = products.find((product) => product._id === productId);
+
+    if (!originalProduct) {
+      return productDetails;
+    }
+
+    const updatedProductDetails: Partial<productType> = {};
+
+    // Сравниваем поля и добавляем изменённые
+    if (productDetails.title !== originalProduct.title) {
+      updatedProductDetails.title = productDetails.title;
+    }
+
+    if (productDetails.imgUrl !== originalProduct.imgUrl) {
+      updatedProductDetails.imgUrl = productDetails.imgUrl;
+    }
+
+    if (productDetails.type !== originalProduct.type) {
+      updatedProductDetails.type = productDetails.type;
+    }
+
+    if (productDetails.category !== originalProduct.category) {
+      updatedProductDetails.category = productDetails.category;
+    }
+
+    if (productDetails.price !== originalProduct.price) {
+      updatedProductDetails.price = productDetails.price;
+    }
+
+    if (productDetails.description !== originalProduct.description) {
+      updatedProductDetails.description = productDetails.description;
+    }
+
+    // Для спецификаций
+    const updatedSpecifications: Partial<typeof productDetails.specifications> = {};
+
+    if (productDetails.specifications.storage !== originalProduct.specifications.storage) {
+      updatedSpecifications.storage = productDetails.specifications.storage;
+    }
+
+    if (productDetails.specifications.battery !== originalProduct.specifications.battery) {
+      updatedSpecifications.battery = productDetails.specifications.battery;
+    }
+
+    if (productDetails.specifications.color !== originalProduct.specifications.color) {
+      updatedSpecifications.color = productDetails.specifications.color;
+    }
+
+    if (Object.keys(updatedSpecifications).length > 0) {
+      updatedProductDetails.specifications = updatedSpecifications;
+    }
+
+    return updatedProductDetails;
   };
 
   const editProduct = (product: productType) => {
@@ -127,7 +185,6 @@ export const AdminPanel = () => {
           </button>
         </div>
         <div className="admin-panel-forms">
-        
           {isOpenAddPanel && (
             <div className="admin-panel-add-form">
               <input
@@ -190,7 +247,7 @@ export const AdminPanel = () => {
               {isEditMode && <button onClick={resetForm}>Отмена</button>}
             </div>
           )}
-            {isOpenList && (
+          {isOpenList && (
             <div>
               <h3>Список товаров</h3>
               <div className="table-container">

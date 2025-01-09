@@ -5,7 +5,7 @@ import { BasketTotal } from "./components/basket-total/basket-total";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { BasketItem } from "./components/basket-item/basket-item";
 import { getCookieToken } from "../../utils/get-cookie-token";
 import { EmptyBasket } from "./components/basket-empty/basket-empty";
@@ -18,7 +18,6 @@ const items = [
   { label: "Корзина", url: "/basket" },
 ];
 export const Basket: React.FC = () => {
-  const dispatch = useDispatch();
   const [productsFromBasket, setProductsFromBasket] = useState<productType[]>([]);
   const userBasket = useSelector((state: RootState) => state.userBasket.basket);
   const allProducts = useSelector((state: RootState) => state.products.products);
@@ -27,7 +26,9 @@ export const Basket: React.FC = () => {
   const { handleRender } = useRender();
   const cookieValue = getCookieToken();
   useEffect(() => {
-    handleRender();
+    if(!userBasket.length) { 
+      handleRender();      
+    }
     if (!cookieValue) {
       navigate("/login");
     }
@@ -36,12 +37,13 @@ export const Basket: React.FC = () => {
     }, 500);
   }, []);
   useEffect(() => {
-    handleRender();
     if (userBasket.length) {
+      console.log('userBasket[0]', userBasket)
       const productsList = userBasket[0].products;
       setProductsFromBasket(() => GetBasketProducts(allProducts, productsList));
     }
-  }, [allProducts, dispatch]);
+  }, [allProducts]);
+  
   return (
     <>
       {showImg ? (

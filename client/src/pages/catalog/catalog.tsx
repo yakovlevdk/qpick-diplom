@@ -7,32 +7,25 @@ import { checkCurrentType } from "./utlis/check-current-type";
 import "./catalog.scss";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from '../../store'
-import { useRender } from "../../hooks/use-render/use-render";
+import { useSetProducts } from "../../hooks/use-set-products/use-set-products";
 export const Catalog: React.FC = () => {
   const { type } = useParams();
   const [currentType, setCurrentType] = useState("");
-  const { handleRender } = useRender();
-  const baskets = useSelector((state: RootState) => state.allBaskets.baskets);
+    const { handleSetProducts } = useSetProducts();
   const [showImg, setShowImg] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       setShowImg(false);
-    }, 300);
+    }, 300);  
+    handleSetProducts()
   }, []);
-  useEffect(() => {
-    handleRender();
-  }, [baskets]);
   useEffect(() => {
 if (type)  { 
   const result = checkCurrentType(type);
   if  (result) { 
     setCurrentType(result);
   }
-
-}
-  }, [type]);
+} }, [type]);
   const items = [
     { label: "Главная", url: "/" },
     { label: "Каталог", url: "/catalog" },
@@ -40,8 +33,7 @@ if (type)  {
   if (type && currentType) {
     items.push({ label: `${currentType}`, url: `/catalog/${type} ` });
   }
-
-  return (
+    return (
     <>
       {showImg ? (
         <div className="loader">

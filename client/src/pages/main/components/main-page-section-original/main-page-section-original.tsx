@@ -59,7 +59,7 @@ export const MainPageOriginalSection: React.FC = () => {
       <div className="main-page-original-section-cards">
         {mainPageOriginalSectionDb.map((product) => {
           return (
-            <Link to={product.linkUrl}>
+            <Link to={product.linkUrl} key={Math.random()}>
               {" "}
               <MainPageOriginalSectionCard
                 title={product.title}

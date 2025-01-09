@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../models/User");
+const Basket = require("../models/Basket");
 const JWT_SECRET = "test";
 
 async function getUsers() {
@@ -15,6 +16,7 @@ async function registerUser(email, password) {
   } else {
     const passwordHash = await bcrypt.hash(password, 10);
     const user = await User.create({ email, password: passwordHash });
+    const basket = await Basket.create({user_id: user._id})
     return jwt.sign(
       {
         email,

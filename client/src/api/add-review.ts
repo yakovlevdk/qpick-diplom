@@ -14,11 +14,13 @@ export const addReview = async ({
   rate,
   content,
 }: addReviewProps) => {
-  await fetch(`http://localhost:3000/reviews`, {
+ return await fetch(`http://localhost:3000/reviews/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ productId, userId, userName, rate, content }),
+    credentials: "include",
   });
+  // console.log(res);
 };

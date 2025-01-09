@@ -5,7 +5,7 @@ export interface Specifications {
     battery?: string;
 }
 
-export interface productType { 
+export interface productType {
     _id?: string;
     title: string;
     type: string;

@@ -1,4 +1,4 @@
-export const login  = async (JSONData: string) =>  await fetch("http://localhost:3000/login", {
+export const login  = async (JSONData: string) =>  await fetch("http://localhost:3000/users/login", {
     method: "POST",
     body: JSONData,
     headers: {

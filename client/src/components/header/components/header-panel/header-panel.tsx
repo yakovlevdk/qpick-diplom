@@ -5,7 +5,7 @@ import { useHandleUserClick } from "./hooks/use-handle-user-click";
 export const HeaderPanel: React.FC = () => {
   const counter = useSelector((state) => state.userBasket.counter);
   const { handleUserClick } = useHandleUserClick();
-  const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  const favorites: string | [] = JSON.parse(localStorage.getItem("favorites")) || [];
   const cookieValue = getCookieToken();
 
   return (
@@ -30,7 +30,6 @@ export const HeaderPanel: React.FC = () => {
           {counter > 0 && (
             <>
               <img src="/ellipse.svg" className="header-panel-counter-img" />
-              <span className="header-panel-counter-span">{counter}</span>
             </>
           )}
         </Link>

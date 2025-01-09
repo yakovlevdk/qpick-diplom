@@ -6,5 +6,5 @@ export const deleteFromBasket = async (userId: string, productId: string) => {
     },
     body: JSON.stringify({ userId, productId }),
     credentials: "include",
-  }).then((res) => res.json())
+  })
 };

@@ -3,7 +3,7 @@ type RegisterData = {
     password: string,
   };
   
-export const register = async (data: RegisterData) =>   fetch("http://localhost:3000/register", {
+export const register = async (data: RegisterData) =>  fetch("http://localhost:3000/users/register", {
           method: "POST",
           body: JSON.stringify(data),
           headers: {
