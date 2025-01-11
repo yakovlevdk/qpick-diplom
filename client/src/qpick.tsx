@@ -1,5 +1,3 @@
-import { Header } from "./components";
-import { Footer } from "./components/footer/footer";
 import { MainPage } from "./pages/main/main";
 import "./qpick.scss";
 
@@ -18,9 +16,7 @@ const {handleRender} = useRender()
   return (
     <>
       <div>
-        <Header />
         <MainPage />
-        <Footer />
       </div>
     </>
   );

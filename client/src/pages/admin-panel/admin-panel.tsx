@@ -1,5 +1,4 @@
-import { Header } from "../../components/header/header";
-import { Footer } from "../../components/footer/footer";
+
 import { useState, useEffect } from "react";
 import { addProduct } from "../../api/add-product";
 import "./admin-panel.scss";
@@ -10,7 +9,7 @@ import { updateProductApi } from '../../api/update-product-api';
 import { productType } from '../../types/productType';
 import { useSetProducts } from "../../hooks/use-set-products/use-set-products";
 
-export const AdminPanel = () => {
+ const AdminPanel = () => {
   const [isOpenAddPanel, setIsOpenAddPanel] = useState(false);
   const [isOpenList, setIsOpenList] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -172,7 +171,6 @@ export const AdminPanel = () => {
 
   return (
     <>
-      <Header />
       <div className="admin-panel">
         <h1>Админ-панель</h1>
         <h2>Функции</h2>
@@ -300,7 +298,8 @@ export const AdminPanel = () => {
           )}
         </div>
       </div>
-      <Footer />
     </>
   );
 };
+
+export default AdminPanel

@@ -18,7 +18,7 @@ import { renderSpecifications } from "./utils/render-specifications";
 import { useFindCurrentProduct } from "../../hooks/use-find-current-product/use-find-current-product";
 
 type itemsType = { label: string; url: string }[];
-export const Product: React.FC = () => {
+ const Product: React.FC = () => {
   const { id } = useParams();
   const {findCurrentProduct} = useFindCurrentProduct()
   const navigate = useNavigate();
@@ -72,7 +72,6 @@ export const Product: React.FC = () => {
     <>
       {product && (
         <div>
-          <Header />
           <BreadCrumb model={items} />
           <div className="product-page">
             <h1 className="product-page-title">
@@ -162,9 +161,11 @@ export const Product: React.FC = () => {
             <Reviews productId={product["_id"]} />
           </div>
 
-          <Footer />
         </div>
       )}
     </>
   );
 };
+
+
+export default Product
