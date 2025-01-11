@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import "./profile.scss";
 import { getCookieToken } from "../../utils/get-cookie-token";
 import { useEffect, useState } from "react";
-import { setProfileInfo } from "../../api/set-profile-info";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { useGetParsedUser } from "../../hooks/use-get-parsed-user/use-get-parsed-user";
 import { userType} from '../../types/userType'
+import { useLogout } from "../../hooks/use-logout/use-logout";
+import { useSaveInfo } from "../../hooks/use-save-info/use-save-info";
  const Profile = () => {
   const [nameInfo, setNameInfo] = useState("");
   const [countryInfo, setCountryInfo] = useState("");
@@ -14,6 +15,8 @@ import { userType} from '../../types/userType'
   const navigate = useNavigate();
   const [parsedUser, setParsedUser] = useState<userType | null>(null);
   const { handleGetParsedUser } = useGetParsedUser();
+  const { handleLogout} = useLogout()
+  const { handleSaveInfo } = useSaveInfo()
   const items = [
     { label: "Главная", url: "/" },
     { label: "Личный кабинет", url: "/profile" },
@@ -24,11 +27,9 @@ import { userType} from '../../types/userType'
       setTimeout(() => navigate("/login"), 2000);
       return;
     }
-
     const parsed= handleGetParsedUser(cookie);
-    if ( parsed) { 
+    if (parsed) { 
       setParsedUser(parsed);
-
     }
   };
 
@@ -36,31 +37,19 @@ import { userType} from '../../types/userType'
     fetchUserData();
   }, [navigate]);
 
-  const handleSaveInfo = async () => {
-    if (nameInfo && countryInfo && parsedUser) {
-      await setProfileInfo(parsedUser.id, nameInfo, countryInfo);
-      await fetchUserData();
-      location.reload();
+
+  const onSaveChanges = async () => {
+    if( parsedUser ) { 
+     await handleSaveInfo({nameInfo, countryInfo, parsedUser});
+     const newCookie =  getCookieToken()
+     if(newCookie) { 
+        const user = handleGetParsedUser(newCookie)
+        if(user) { 
+          setParsedUser(user)
+        }
+     }
+      setShowChangeInfoForm(false);
     }
-  };
-
-  const logout = () => {
-    const fetchLogout = async () => {
-      const response = await fetch("http://localhost:3000/users/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      if (response.status === 200) {
-        navigate("/login");
-        return;
-      }
-    };
-    fetchLogout();
-  };
-
-  const onSaveChanges = () => {
-    handleSaveInfo();
-    setShowChangeInfoForm(false);
   };
   return (
     <>
@@ -122,7 +111,6 @@ import { userType} from '../../types/userType'
                         value={countryInfo}
                         onChange={(e) => setCountryInfo(e.target.value)}
                       />
-                      <button onClick={handleSaveInfo}>Сохранить</button>
                     </div>
                   )}
                 </div>
@@ -144,7 +132,7 @@ import { userType} from '../../types/userType'
                       <button>Админ-панель</button>
                     </Link>
                   )}
-                  <button onClick={logout}>Выйти</button>
+                  <button onClick={handleLogout}>Выйти</button>
                 </div>
               </div>
             </div>

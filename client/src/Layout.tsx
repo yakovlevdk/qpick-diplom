@@ -2,7 +2,6 @@ import { Outlet } from "react-router-dom"
 import { Header } from "./components"
 import { Footer } from "./components/footer/footer"
 import { Suspense } from "react"
-
 export const Layout = () => { 
     return ( 
         <>
@@ -12,7 +11,7 @@ export const Layout = () => {
           <img src="/loader.svg" width={70} height={70} />
         </div>}>
          <Outlet/>
-            </Suspense>
+        </Suspense>
          </div>
         <Footer/>
         </>
