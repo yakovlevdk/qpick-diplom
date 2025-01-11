@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { Header } from "../../components";
-import { Footer } from "../../components/footer/footer";
 import "./register.scss";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,7 +7,7 @@ import { Link } from "react-router-dom";
 import { validationSchema} from './utils/register-schema'
 import { useRegister } from './utils/handle-register'
 import { items} from './utils/breadcrumbs-items'
-export const Register = () => {
+ const Register = () => {
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
@@ -32,7 +30,6 @@ export const Register = () => {
   return (
     <>
       <div className="register-container">
-        <Header />
         <BreadCrumb model={items} />
         <div className="register-pages">
           <h1>Регистрация</h1>
@@ -74,8 +71,10 @@ export const Register = () => {
             Уже зарегистрированы? <Link to={"/login"}>Войти</Link>
           </span>
         </div>
-        <Footer />
       </div>
     </>
   );
 };
+
+
+export default Register

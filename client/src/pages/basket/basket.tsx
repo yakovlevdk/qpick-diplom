@@ -1,5 +1,4 @@
-import { Header } from "../../components";
-import { Footer } from "../../components/footer/footer";
+
 import "./basket.scss";
 import { BasketTotal } from "./components/basket-total/basket-total";
 import { BreadCrumb } from "primereact/breadcrumb";
@@ -17,11 +16,11 @@ const items = [
   { label: "Главная", url: "/" },
   { label: "Корзина", url: "/basket" },
 ];
-export const Basket: React.FC = () => {
+ const Basket: React.FC = () => {
   const [productsFromBasket, setProductsFromBasket] = useState<productType[]>([]);
   const userBasket = useSelector((state: RootState) => state.userBasket.basket);
   const allProducts = useSelector((state: RootState) => state.products.products);
-  const [showImg, setShowImg] = useState(true);
+
   const navigate = useNavigate();
   const { handleRender } = useRender();
   const cookieValue = getCookieToken();
@@ -32,9 +31,7 @@ export const Basket: React.FC = () => {
     if (!cookieValue) {
       navigate("/login");
     }
-    setTimeout(() => {
-      setShowImg(false);
-    }, 500);
+ 
   }, []);
   useEffect(() => {
     if (userBasket.length) {
@@ -46,13 +43,8 @@ export const Basket: React.FC = () => {
   
   return (
     <>
-      {showImg ? (
-        <div className="loader">
-          <img src="/loader.svg" width={70} height={70} />
-        </div>
-      ) : (
+     
         <div>
-          <Header />
           <BreadCrumb model={items} />
           <div className="basket">
             {userBasket.length < 1 || userBasket[0].products.length < 1 ? (
@@ -71,9 +63,10 @@ export const Basket: React.FC = () => {
               </>
             )}
           </div>
-          <Footer />
         </div>
-      )}
+    
     </>
   );
 };
+
+export default Basket

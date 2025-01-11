@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Header } from "../../components";
-import { Footer } from "../../components/footer/footer";
+
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import "./login.scss";
@@ -9,7 +8,7 @@ import { loginSchema } from "./login-schema";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { useLogin} from './hooks/useLogin'
 import { items } from './utils/login-items'
-export const Login = () => {
+ const Login = () => {
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [error] = useState("");
@@ -31,7 +30,6 @@ export const Login = () => {
   return (
     <>
       <div className="login-container">
-        <Header />
         <BreadCrumb model={items} />
         <div className="login-pages">
           <h1>Вход</h1>
@@ -71,8 +69,10 @@ export const Login = () => {
             Ещё не зарегистрированы? <Link to={"/register"}>Регистрация</Link>
           </span>
         </div>
-        <Footer />
       </div>
     </>
   );
 };
+
+
+export default Login

@@ -1,7 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Header } from "../../components";
 import { Link } from "react-router-dom";
-import { Footer } from "../../components/footer/footer";
 import "./profile.scss";
 import { getCookieToken } from "../../utils/get-cookie-token";
 import { useEffect, useState } from "react";
@@ -9,7 +7,7 @@ import { setProfileInfo } from "../../api/set-profile-info";
 import { BreadCrumb } from "primereact/breadcrumb";
 import { useGetParsedUser } from "../../hooks/use-get-parsed-user/use-get-parsed-user";
 import { userType} from '../../types/userType'
-export const Profile = () => {
+ const Profile = () => {
   const [nameInfo, setNameInfo] = useState("");
   const [countryInfo, setCountryInfo] = useState("");
   const [showChangeInfoForm, setShowChangeInfoForm] = useState(false);
@@ -66,7 +64,6 @@ export const Profile = () => {
   };
   return (
     <>
-      <Header />
       <BreadCrumb model={items} />
       <div className="for-mobile">
         {parsedUser ? (
@@ -151,7 +148,6 @@ export const Profile = () => {
                 </div>
               </div>
             </div>
-            <Footer />
           </div>
         ) : (
           <div className="not-login">
@@ -163,3 +159,6 @@ export const Profile = () => {
     </>
   );
 };
+
+
+export default Profile
